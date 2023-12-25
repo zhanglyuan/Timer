@@ -79,55 +79,49 @@ namespace HomeModule.ViewModels
 
         private void InitTimer()
         {
-            Task.Run(() =>
-            {
-                while (timer == null)
-                {
-                    var timerInfo = timerRepository.GetTimer();
-                    if (DateTime.Now >= DateTime.Parse(timerInfo.WorkingHour) && DateTime.Now < DateTime.Parse(timerInfo.RushHour))
-                    {
-                        Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(true);
-
-                        timer = new Timer(100);
-                        timer.Elapsed += Timer_Elapsed;
-                        timer.Start();
-                    }
-                }
-            });
+            timer = new Timer(1000);
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
+            var timerInfo = timerRepository.GetTimer();
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             var timerInfo = timerRepository.GetTimer();
-            TimeSpan dateTime = DateTime.Parse(timerInfo.RushHour) - DateTime.Now;
-
-            int totalSeconds = (int)dateTime.TotalSeconds;
-
-            if (totalSeconds == 0)
+            if (DateTime.Now >= DateTime.Parse(timerInfo.WorkingHour) && DateTime.Now < DateTime.Parse(timerInfo.RushHour))
             {
-                CloseComputer();
-                timer?.Stop();
-                timer = null;
-                InitTimer();
-            }
-            else if (totalSeconds < 0)
-            {
-                timer?.Stop();
-                timer = null;
-                InitTimer();
-                Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
+                TimeSpan dateTime = DateTime.Parse(timerInfo.RushHour) - DateTime.Now;
+                int totalSeconds = (int)dateTime.TotalSeconds;
+
+                if (totalSeconds > 0)
+                {
+                    Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(true);
+                    Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Publish(Tuple.Create(
+                             String.Format("{0:00}", dateTime.Hours),
+                             String.Format("{0:00}", dateTime.Minutes),
+                             String.Format("{0:00}", dateTime.Seconds)));
+                }
+                else if (totalSeconds == 0)
+                {
+                    Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
+
+                    CloseComputer();
+                    Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Publish(Tuple.Create(
+                           String.Format("{0:00}", dateTime.Hours),
+                           String.Format("{0:00}", dateTime.Minutes),
+                           String.Format("{0:00}", dateTime.Seconds)));
+                }
             }
             else
             {
-                Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Publish(Tuple.Create(
-              String.Format("{0:00}", dateTime.Hours),
-              String.Format("{0:00}", dateTime.Minutes),
-              String.Format("{0:00}", dateTime.Seconds)));
+                Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
             }
         }
 
         private void CloseComputer()
         {
+            Log.Info($"{nameof(CloseComputer)} Strat");
+
             var timerInfo = timerRepository.GetTimer();
             if (timerInfo.IsShutDownComputer)
             {
@@ -142,8 +136,11 @@ namespace HomeModule.ViewModels
 #endif
                 Mediator.EventAggregator.GetEvent<ShutDownComputerEvent>().Publish();
             }
-            Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
+
             Mediator.EventAggregator.GetEvent<WindowShow>().Publish();
+            Mediator.EventAggregator.GetEvent<WindowTip>().Publish();
+
+            Log.Info($"{nameof(CloseComputer)} End");
         }
 
         private void OnUpdateIsWorking(bool obj)

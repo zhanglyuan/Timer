@@ -28,4 +28,7 @@ namespace Common.Events
 
     public class WindowHide : PubSubEvent
     { }
+
+    public class WindowTip : PubSubEvent
+    { }
 }
