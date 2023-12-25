@@ -38,6 +38,14 @@
             <Setter Property="FontSize" Value="15" />
         </Style>
     </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="UnLoaded">
+            <i:InvokeCommandAction Command="{Binding UnLoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Border CornerRadius="11" Margin="3" Background="White">
             <i:Interaction.Triggers>

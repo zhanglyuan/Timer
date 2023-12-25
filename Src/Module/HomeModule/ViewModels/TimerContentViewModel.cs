@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Automation.Provider;
 
 namespace HomeModule.ViewModels
 {
@@ -116,11 +117,13 @@ namespace HomeModule.ViewModels
                 InitTimer();
                 Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
             }
-
-            Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Publish(Tuple.Create(
-                String.Format("{0:00}", dateTime.Hours),
-                String.Format("{0:00}", dateTime.Minutes),
-                String.Format("{0:00}", dateTime.Seconds)));
+            else
+            {
+                Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Publish(Tuple.Create(
+              String.Format("{0:00}", dateTime.Hours),
+              String.Format("{0:00}", dateTime.Minutes),
+              String.Format("{0:00}", dateTime.Seconds)));
+            }
         }
 
         private void CloseComputer()
@@ -128,7 +131,7 @@ namespace HomeModule.ViewModels
             var timerInfo = timerRepository.GetTimer();
             if (timerInfo.IsShutDownComputer)
             {
-                Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(true);
+                Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
 #if !DEBUG
                 Process.Start(new ProcessStartInfo("shutdown.exe", "/s /t 10")
                 {
@@ -141,7 +144,7 @@ namespace HomeModule.ViewModels
                 Mediator.EventAggregator.GetEvent<ShutDownComputerEvent>().Publish();
             }
 
-            Mediator.EventAggregator.GetEvent<WindowAcActivateEvent>().Publish();
+            Mediator.EventAggregator.GetEvent<WindowShow>().Publish();
         }
 
         private void OnUpdateIsWorking(bool obj)

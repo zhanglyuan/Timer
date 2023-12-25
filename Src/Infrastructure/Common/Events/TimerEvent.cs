@@ -20,6 +20,12 @@ namespace Common.Events
     public class UpdateIsWorking : PubSubEvent<bool>
     { }
 
-    public class WindowAcActivateEvent : PubSubEvent
+    public class WindowClose : PubSubEvent
+    { }
+
+    public class WindowShow : PubSubEvent
+    { }
+
+    public class WindowHide : PubSubEvent
     { }
 }
