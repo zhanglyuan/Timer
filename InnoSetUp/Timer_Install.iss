@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ÏÂ°àµ¹¼ÆÊ±"
-#define MyAppVersion "2.0.1"
+#define MyAppVersion "2.0.2"
 #define MyAppPublisher "ZhangYuan"
 #define MyAppExeName "TImer.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -22,8 +22,8 @@ AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=OutPut
-OutputBaseFilename=Timer_install_2.0.1
-SetupIconFile=E:\Projects\Timer\InnoSetUp\res\time.ico
+OutputBaseFilename=Timer_install_2.0.2
+SetupIconFile=.\res\time.ico
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\time.ico
 Compression=lzma
@@ -37,8 +37,8 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\Projects\Timer\InnoSetUp\res\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Projects\Timer\InnoSetUp\res\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\res\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\res\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
