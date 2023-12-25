@@ -106,13 +106,13 @@ namespace HomeModule.ViewModels
             if (totalSeconds == 0)
             {
                 CloseComputer();
-                timer.Stop();
+                timer?.Stop();
                 timer = null;
                 InitTimer();
             }
             else if (totalSeconds < 0)
             {
-                timer.Stop();
+                timer?.Stop();
                 timer = null;
                 InitTimer();
                 Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
@@ -131,7 +131,6 @@ namespace HomeModule.ViewModels
             var timerInfo = timerRepository.GetTimer();
             if (timerInfo.IsShutDownComputer)
             {
-                Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
 #if !DEBUG
                 Process.Start(new ProcessStartInfo("shutdown.exe", "/s /t 10")
                 {
@@ -143,7 +142,7 @@ namespace HomeModule.ViewModels
 #endif
                 Mediator.EventAggregator.GetEvent<ShutDownComputerEvent>().Publish();
             }
-
+            Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
             Mediator.EventAggregator.GetEvent<WindowShow>().Publish();
         }
 
