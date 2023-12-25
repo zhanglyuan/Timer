@@ -25,7 +25,7 @@
                 <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="Height" From="0" To="200" Duration="0:0:0.5" />
+                            <DoubleAnimation Storyboard.TargetProperty="Height" From="0" To="200" Duration="0:0:1.2" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
