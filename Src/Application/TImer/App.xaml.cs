@@ -29,6 +29,10 @@ namespace TImer
                 Environment.Exit(0);
             }
 
+#if DEBUG
+            Log.Init(Process.GetCurrentProcess().ProcessName);
+#endif
+
             return Container.Resolve<MainWindow>();
         }
 

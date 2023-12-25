@@ -1,5 +1,7 @@
-﻿using Common.Events;
+﻿using Common;
+using Common.Events;
 using CommonUIBase.Controls;
+using CommonUIBase.Controls.NotifyIcons.Runtimes;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -35,6 +37,15 @@ namespace TImer.ViewModels
             Mediator.EventAggregator.GetEvent<ShutDownComputerEvent>().Subscribe(OnShutDownComputerEvent, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Subscribe(OnUpdateTimerEvent, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Subscribe(OnUpdateIsWorking, ThreadOption.UIThread);
+
+            Mediator.EventAggregator.GetEvent<WindowTip>().Subscribe(OnWindowTip, ThreadOption.UIThread);
+        }
+
+        private void OnWindowTip()
+        {
+            Log.Info($"{nameof(OnWindowTip)} Start");
+            notifyIcon.ShowBalloonTips("下班倒计时", "下班啦！", NotifyIconInfoType.None);
+            Log.Info($"{nameof(OnWindowTip)} End");
         }
 
         private void OnUpdateIsWorking(bool obj)

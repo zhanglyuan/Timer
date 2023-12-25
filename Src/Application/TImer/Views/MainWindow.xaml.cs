@@ -19,7 +19,6 @@ namespace TImer.Views
             Mediator.EventAggregator.GetEvent<WindowShow>().Subscribe(OnWindowShow, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<WindowHide>().Subscribe(OnWindowHide, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<WindowClose>().Subscribe(OnWindowClose, ThreadOption.UIThread);
-            Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
         }
 
         private void OnWindowClose()
