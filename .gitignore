@@ -1,0 +1,11 @@
+/src/.vs
+*.dll
+*.pdb
+/InnoSetUp/res
+/InnoSetUp/OutPut
+*.suo
+obj
+bin
+*.user
+*.pubxml
+.vs
