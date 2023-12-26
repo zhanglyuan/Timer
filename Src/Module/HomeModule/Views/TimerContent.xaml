@@ -63,30 +63,15 @@
             </TextBlock.Style>
         </TextBlock>
 
-        <Image gif:ImageBehavior.AnimatedSource="pack://application:,,,/CommonUIBase;Component/Assets/rushHour.gif" Grid.Column="1"  VerticalAlignment="Center">
+        <Image  Grid.Column="1"  VerticalAlignment="Center">
             <Image.Style>
                 <Style TargetType="{x:Type Image}">
                     <Style.Triggers>
                         <DataTrigger  Binding="{Binding IsWorking}" Value="False">
-                            <Setter Property="Visibility" Value="Visible" />
+                            <Setter Property="gif:ImageBehavior.AnimatedSource" Value="pack://application:,,,/CommonUIBase;Component/Assets/working.gif" />
                         </DataTrigger>
                         <DataTrigger  Binding="{Binding IsWorking}" Value="True">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Image.Style>
-        </Image>
-
-        <Image gif:ImageBehavior.AnimatedSource="pack://application:,,,/CommonUIBase;Component/Assets/working.gif" Grid.Column="1"  VerticalAlignment="Center">
-            <Image.Style>
-                <Style TargetType="{x:Type Image}">
-                    <Style.Triggers>
-                        <DataTrigger   Binding="{Binding IsWorking}" Value="False">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-                        <DataTrigger   Binding="{Binding IsWorking}" Value="True">
-                            <Setter Property="Visibility" Value="Visible" />
+                            <Setter Property="gif:ImageBehavior.AnimatedSource" Value="pack://application:,,,/CommonUIBase;Component/Assets/working.gif" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
