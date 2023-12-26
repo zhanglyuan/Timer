@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ÏÂ°àµ¹¼ÆÊ±"
-#define MyAppVersion "2.0.2"
+#define MyAppVersion "2.0.3"
 #define MyAppPublisher "ZhangYuan"
 #define MyAppExeName "TImer.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -22,7 +22,7 @@ AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=OutPut
-OutputBaseFilename=Timer_install_2.0.2
+OutputBaseFilename=Timer_install_2.0.3
 SetupIconFile=.\res\time.ico
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\time.ico
