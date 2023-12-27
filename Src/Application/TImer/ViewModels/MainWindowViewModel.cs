@@ -1,10 +1,12 @@
 ﻿using Common;
 using Common.Constants;
 using Common.Events;
+using Common.Interfaces;
 using CommonUIBase.Controls;
 using CommonUIBase.Controls.NotifyIcons.Runtimes;
 using Prism.Commands;
 using Prism.Events;
+using Prism.Ioc;
 using Prism.Mvvm;
 using System;
 
@@ -12,6 +14,7 @@ namespace TImer.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
+        private readonly IVersionUpdate versionUpdate;
         private NotifyIcon notifyIcon;
 
         private bool _isShutDownComputerDialog;
@@ -29,27 +32,28 @@ namespace TImer.ViewModels
         public DelegateCommand LoadedCommand { get; private set; }
         public DelegateCommand UnLoadedCommand { get; private set; }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IContainerProvider containerProvider)
         {
+            versionUpdate = containerProvider.Resolve<IVersionUpdate>();
+
             DragMoveWindowCommand = new DelegateCommand(DragMoveWindowExecute);
             LoadedCommand = new DelegateCommand(LoadedExecute);
             UnLoadedCommand = new DelegateCommand(UnLoadedExecute);
 
             Mediator.EventAggregator.GetEvent<ShutDownComputerEvent>().Subscribe(OnShutDownComputerEvent, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Subscribe(OnUpdateTimerEvent, ThreadOption.UIThread);
-            Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Subscribe(OnUpdateIsWorking, ThreadOption.UIThread);
-
-            Mediator.EventAggregator.GetEvent<WindowTip>().Subscribe(OnWindowTip, ThreadOption.UIThread);
+            Mediator.EventAggregator.GetEvent<UpdateIsWorkingEvent>().Subscribe(OnUpdateIsWorkingEvent, ThreadOption.UIThread);
+            Mediator.EventAggregator.GetEvent<WindowTipEvent>().Subscribe(OnWindowTipEvent, ThreadOption.UIThread);
         }
 
-        private void OnWindowTip()
+        private void OnWindowTipEvent()
         {
-            Log.Info($"{nameof(OnWindowTip)} Start");
+            Log.Info($"{nameof(OnWindowTipEvent)} Start");
             notifyIcon.ShowBalloonTips("下班倒计时", "下班啦！", NotifyIconInfoType.None);
-            Log.Info($"{nameof(OnWindowTip)} End");
+            Log.Info($"{nameof(OnWindowTipEvent)} End");
         }
 
-        private void OnUpdateIsWorking(bool obj)
+        private void OnUpdateIsWorkingEvent(bool obj)
         {
             if (!obj)
             {
@@ -88,7 +92,7 @@ namespace TImer.ViewModels
             notifyIcon.Title = "下班倒计时";
             notifyIcon.Click += (s, e) =>
             {
-                Mediator.EventAggregator.GetEvent<WindowShow>().Publish();
+                Mediator.EventAggregator.GetEvent<WindowShowEvent>().Publish();
             };
 
             var contextMenu = new System.Windows.Controls.ContextMenu();
@@ -105,7 +109,7 @@ namespace TImer.ViewModels
             };
             windowMin.Click += (s, e) =>
             {
-                Mediator.EventAggregator.GetEvent<WindowHide>().Publish();
+                Mediator.EventAggregator.GetEvent<WindowHideEvent>().Publish();
             };
             contextMenu.Items.Add(windowMin);
 
@@ -115,7 +119,7 @@ namespace TImer.ViewModels
             };
             shutDown.Click += (s, e) =>
             {
-                Mediator.EventAggregator.GetEvent<WindowClose>().Publish();
+                Mediator.EventAggregator.GetEvent<WindowCloseEvent>().Publish();
             };
             contextMenu.Items.Add(shutDown);
 

@@ -69,7 +69,7 @@ namespace HomeModule.ViewModels
 
             Mediator.EventAggregator.GetEvent<TimerInitEvent>().Subscribe(OnTimerInitEvent);
             Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Subscribe(OnUpdateTimerEvent, ThreadOption.UIThread);
-            Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Subscribe(OnUpdateIsWorking, ThreadOption.UIThread);
+            Mediator.EventAggregator.GetEvent<UpdateIsWorkingEvent>().Subscribe(OnUpdateIsWorkingEvent, ThreadOption.UIThread);
         }
 
         private void OnTimerInitEvent()
@@ -95,7 +95,7 @@ namespace HomeModule.ViewModels
 
                 if (totalSeconds > 0)
                 {
-                    Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(true);
+                    Mediator.EventAggregator.GetEvent<UpdateIsWorkingEvent>().Publish(true);
                     Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Publish(Tuple.Create(
                              String.Format("{0:00}", dateTime.Hours),
                              String.Format("{0:00}", dateTime.Minutes),
@@ -103,7 +103,7 @@ namespace HomeModule.ViewModels
                 }
                 else if (totalSeconds == 0)
                 {
-                    Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
+                    Mediator.EventAggregator.GetEvent<UpdateIsWorkingEvent>().Publish(false);
 
                     CloseComputer();
                     Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Publish(Tuple.Create(
@@ -114,7 +114,7 @@ namespace HomeModule.ViewModels
             }
             else
             {
-                Mediator.EventAggregator.GetEvent<UpdateIsWorking>().Publish(false);
+                Mediator.EventAggregator.GetEvent<UpdateIsWorkingEvent>().Publish(false);
             }
         }
 
@@ -137,13 +137,13 @@ namespace HomeModule.ViewModels
                 Mediator.EventAggregator.GetEvent<ShutDownComputerEvent>().Publish();
             }
 
-            Mediator.EventAggregator.GetEvent<WindowShow>().Publish();
-            Mediator.EventAggregator.GetEvent<WindowTip>().Publish();
+            Mediator.EventAggregator.GetEvent<WindowShowEvent>().Publish();
+            Mediator.EventAggregator.GetEvent<WindowTipEvent>().Publish();
 
             Log.Info($"{nameof(CloseComputer)} End");
         }
 
-        private void OnUpdateIsWorking(bool obj)
+        private void OnUpdateIsWorkingEvent(bool obj)
         {
             IsWorking = obj;
         }

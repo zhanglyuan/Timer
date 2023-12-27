@@ -17,18 +17,21 @@ namespace Common.Events
     public class UpdateTimerEvent : PubSubEvent<Tuple<string, string, string>>
     { }
 
-    public class UpdateIsWorking : PubSubEvent<bool>
+    public class UpdateIsWorkingEvent : PubSubEvent<bool>
     { }
 
-    public class WindowClose : PubSubEvent
+    public class WindowCloseEvent : PubSubEvent
     { }
 
-    public class WindowShow : PubSubEvent
+    public class WindowShowEvent : PubSubEvent
     { }
 
-    public class WindowHide : PubSubEvent
+    public class WindowHideEvent : PubSubEvent
     { }
 
-    public class WindowTip : PubSubEvent
+    public class WindowTipEvent : PubSubEvent
+    { }
+
+    public class UpdateAppEvent : PubSubEvent
     { }
 }
