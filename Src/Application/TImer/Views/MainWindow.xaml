@@ -7,7 +7,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         WindowStyle="None"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         ShowInTaskbar="True"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:region="clr-namespace:Common;assembly=Common"
