@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Constants;
 using Common.Events;
 using CommonUIBase.Controls;
 using CommonUIBase.Controls.NotifyIcons.Runtimes;
@@ -92,25 +93,31 @@ namespace TImer.ViewModels
 
             var contextMenu = new System.Windows.Controls.ContextMenu();
 
-            var menuItem = new System.Windows.Controls.MenuItem()
+            var version = new System.Windows.Controls.MenuItem()
+            {
+                Header = "版本:" + GlobalSettings.Version
+            };
+            contextMenu.Items.Add(version);
+
+            var windowMin = new System.Windows.Controls.MenuItem()
             {
                 Header = "最小化"
             };
-            menuItem.Click += (s, e) =>
+            windowMin.Click += (s, e) =>
             {
                 Mediator.EventAggregator.GetEvent<WindowHide>().Publish();
             };
-            contextMenu.Items.Add(menuItem);
+            contextMenu.Items.Add(windowMin);
 
-            var menuItem2 = new System.Windows.Controls.MenuItem()
+            var shutDown = new System.Windows.Controls.MenuItem()
             {
                 Header = "退出程序"
             };
-            menuItem2.Click += (s, e) =>
+            shutDown.Click += (s, e) =>
             {
                 Mediator.EventAggregator.GetEvent<WindowClose>().Publish();
             };
-            contextMenu.Items.Add(menuItem2);
+            contextMenu.Items.Add(shutDown);
 
             notifyIcon.ContextMenu = contextMenu;
         }

@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using Common.Constants;
 using HomeModule.Views;
 using Prism.Ioc;
 using Prism.Modularity;
