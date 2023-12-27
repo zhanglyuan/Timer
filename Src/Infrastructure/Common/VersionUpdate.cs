@@ -3,6 +3,7 @@ using Common.Events;
 using Common.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Policy;
@@ -16,11 +17,12 @@ namespace Common
     public class VersionUpdate : IVersionUpdate
     {
 #if DEBUG
-        private Timer timer = new Timer(10000);
+        private Timer timer = new Timer(20000);
 #else
          private Timer timer = new Timer(300000);
 #endif
         private static readonly HttpClient client = new HttpClient();
+        private static string downloadUrl = string.Empty;
 
         public VersionUpdate()
         {
@@ -39,7 +41,9 @@ namespace Common
                 if (Version.TryParse(newVersion, out Version res) && res.CompareTo(Version.Parse(GlobalSettings.Version)) > 0)
                 {
                     timer.Stop();
-                    Mediator.EventAggregator.GetEvent<UpdateAppEvent>().Publish();
+                    downloadUrl = string.Format(GlobalSettings.ReleasesDownload, res);
+                    if (!await GetNewFile())
+                        timer.Start();
                 }
             }
         }
@@ -57,6 +61,39 @@ namespace Common
                 Log.Error($"GetNewVersion {e.Message}");
                 return string.Empty;
             }
+        }
+
+        private async Task<bool> GetNewFile()
+        {
+            try
+            {
+                Mediator.EventAggregator.GetEvent<UpdateAppStartEvent>().Publish();
+
+                HttpResponseMessage response = await client.GetAsync(downloadUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    // 创建文件流以保存文件内容
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    {
+                        // 定义保存文件的路径和文件名
+                        string savePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NewVersion.exe");
+
+                        // 写入文件流到磁盘文件
+                        using (var fileStream = new FileStream(savePath, FileMode.Create))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                        }
+                    }
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                Log.Error($"GetNewFile {e.Message}");
+                return false;
+            }
+
+            Mediator.EventAggregator.GetEvent<UpdateAppStartEvent>().Publish();
+            return true;
         }
     }
 }

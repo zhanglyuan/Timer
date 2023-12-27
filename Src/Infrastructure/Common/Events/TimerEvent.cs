@@ -32,6 +32,9 @@ namespace Common.Events
     public class WindowTipEvent : PubSubEvent
     { }
 
-    public class UpdateAppEvent : PubSubEvent
+    public class UpdateAppStartEvent : PubSubEvent
+    { }
+
+    public class UpdateAppEndEvent : PubSubEvent
     { }
 }
