@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,12 @@ namespace Common.Model
 {
     public class TimerInfo
     {
-        public string WorkingHour { get; set; }
-        public string RushHour { get; set; }
+        [PrimaryKey]
+        public string ID { get; set; } = Guid.NewGuid().ToString("N");
 
-        public bool IsShutDownComputer { get; set; }
+        public string WorkingHour { get; set; } = "09:00";
+        public string RushHour { get; set; } = "18:00";
+
+        public bool IsShutDownComputer { get; set; } = false;
     }
 }

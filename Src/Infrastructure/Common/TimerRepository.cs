@@ -1,5 +1,6 @@
 ﻿using Common.Interfaces;
 using Common.Model;
+using Prism.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +11,27 @@ namespace Common
 {
     public class TimerRepository : ITimerRepository
     {
-        private TimerInfo _timerInfo = new TimerInfo();
         private object _locker = new object();
+        private readonly ILocalDB _db;
+
+        public TimerRepository(IContainerProvider containerProvider)
+        {
+            _db = containerProvider.Resolve<ILocalDB>();
+        }
 
         public TimerInfo GetTimer()
         {
             lock (_locker)
             {
-                return _timerInfo;
+                return _db.GetTimer();
             }
         }
 
-        public void SaveTimer(string workingHour, string rushHour, bool? isShutDownComputer)
+        public bool SaveTimer(TimerInfo timer)
         {
             lock (_locker)
             {
-                if (!string.IsNullOrEmpty(workingHour))
-                    _timerInfo.WorkingHour = workingHour;
-
-                if (!string.IsNullOrEmpty(rushHour))
-                    _timerInfo.RushHour = rushHour;
-
-                if (isShutDownComputer != null)
-                    _timerInfo.IsShutDownComputer = (bool)isShutDownComputer;
+                return _db.SaveTimer(timer);
             }
         }
     }

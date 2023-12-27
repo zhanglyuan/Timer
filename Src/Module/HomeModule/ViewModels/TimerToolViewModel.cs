@@ -14,11 +14,6 @@ namespace HomeModule.ViewModels
 {
     public class TimerToolViewModel : BindableBase
     {
-        private string basePath = System.IO.Path.Combine(Path.GetTempPath(), "Timer");
-
-        private string defaultWorkingHour = "9:00";
-        private string defaultRushHour = "18:00";
-
         private readonly ITimerRepository timerRepository;
 
         private string _workingHour = string.Empty;
@@ -50,7 +45,12 @@ namespace HomeModule.ViewModels
             get { return _isShutDownComputer; }
             set
             {
-                timerRepository?.SaveTimer(string.Empty, string.Empty, value);
+                var timer = timerRepository.GetTimer();
+                if (timer != null && timer.IsShutDownComputer != value)
+                {
+                    timer.IsShutDownComputer = value;
+                    timerRepository.SaveTimer(timer);
+                }
                 SetProperty(ref _isShutDownComputer, value);
             }
         }
@@ -59,18 +59,13 @@ namespace HomeModule.ViewModels
 
         public TimerToolViewModel(IContainerProvider containerProvider)
         {
-            if (!Directory.Exists(basePath))
-            {
-                Directory.CreateDirectory(basePath);
-            }
-
             timerRepository = containerProvider.Resolve<ITimerRepository>();
 
             SaveCommand = new DelegateCommand(SaveExecute);
-            _ = InitAsync();
+            Init();
         }
 
-        private async void SaveExecute()
+        private void SaveExecute()
         {
             TimeSpan dateTime = DateTime.Parse(rushHour) - DateTime.Parse(workingHour);
             if (dateTime.TotalSeconds <= 0)
@@ -79,68 +74,28 @@ namespace HomeModule.ViewModels
                 return;
             }
 
-            await SaveTime(nameof(workingHour), workingHour);
-            await SaveTime(nameof(rushHour), rushHour);
-
-            timerRepository.SaveTimer(workingHour, rushHour, null);
+            var timer = timerRepository.GetTimer();
+            if (timer != null)
+            {
+                timer.RushHour = rushHour;
+                timer.WorkingHour = workingHour;
+                timerRepository.SaveTimer(timer);
+            }
         }
 
-        private async Task InitAsync()
+        private void Init()
         {
-            var tuple1 = await InitTime(nameof(workingHour), defaultWorkingHour);
-            var tuple2 = await InitTime(nameof(rushHour), defaultRushHour);
-
-            TimeSpan dateTime = DateTime.Parse(tuple2.Item2) - DateTime.Parse(tuple1.Item2);
-
-            if (dateTime.TotalSeconds <= 0)
+            var timer = timerRepository.GetTimer();
+            if (timer == null)
             {
-                workingHour = defaultWorkingHour;
-                rushHour = defaultRushHour;
-                await SaveTime(nameof(workingHour), workingHour);
-                await SaveTime(nameof(rushHour), rushHour);
+                timer = new Common.Model.TimerInfo();
+                timerRepository.SaveTimer(timer);
             }
-            else
-            {
-                workingHour = tuple1.Item2;
-                rushHour = tuple2.Item2;
-            }
+            workingHour = timer.WorkingHour;
+            rushHour = timer.RushHour;
+            IsShutDownComputer = timer.IsShutDownComputer;
 
-            timerRepository.SaveTimer(workingHour, rushHour, false);
             Mediator.EventAggregator.GetEvent<TimerInitEvent>().Publish();
-        }
-
-        private async Task<Tuple<bool, string>> InitTime(string strPath, string defaultTime)
-        {
-            string path = Path.Combine(basePath, strPath + ".txt");
-            try
-            {
-                if (File.Exists(path))
-                {
-                    string strWorkingHour = await File.ReadAllTextAsync(path);
-                    if (DateTime.TryParse(strWorkingHour, out DateTime result))
-                    {
-                        return Tuple.Create(true, result.ToString("HH:mm"));
-                    }
-                }
-
-                await File.WriteAllTextAsync(path, defaultTime);
-            }
-            catch (Exception)
-            {
-            }
-            return Tuple.Create(false, defaultTime);
-        }
-
-        private async Task SaveTime(string strPath, string time)
-        {
-            string path = Path.Combine(basePath, strPath + ".txt");
-            try
-            {
-                await File.WriteAllTextAsync(path, time);
-            }
-            catch (Exception)
-            {
-            }
         }
     }
 }

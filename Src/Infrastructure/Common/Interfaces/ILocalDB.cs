@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface ITimerRepository
+    public interface ILocalDB
     {
-        TimerInfo GetTimer();
-
         bool SaveTimer(TimerInfo timer);
+
+        TimerInfo GetTimer();
     }
 }
