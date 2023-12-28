@@ -47,6 +47,7 @@ namespace TImer.Views
         private void OnWindowShowEvent()
         {
             this.Show();
+            this.WindowState= WindowState.Normal;
             this.Activate();
         }
 
