@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "下班倒计时"
-#define MyAppVersion "2.0.3"
+#define MyAppVersion "3.0.0"
 #define MyAppPublisher "ZhangYuan"
 #define MyAppExeName "TImer.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -22,7 +22,7 @@ AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=OutPut
-OutputBaseFilename=Timer_install_2.0.3
+OutputBaseFilename=Timer_install_3.0.0
 SetupIconFile=.\res\time.ico
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\time.ico
@@ -53,3 +53,37 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[UninstallDelete]
+; 卸载后删除安装目录下所有文件
+Type: filesandordirs; Name: "{app}"
+
+
+[Code]
+var 
+    ResultCode1:integer;
+procedure CurPageChanged(CurPageID: Integer);
+var
+  ErrorCode: Integer; 
+begin  
+Log(format( 'CurPageID id = %d',[ ( CurPageID) ]));
+  begin
+      case CurPageID of
+           wpSelectDir:
+           begin
+
+           end;
+           wpInstalling:
+           begin
+          
+           end;
+           wpFinished:
+           begin
+                if ParamCount >1 then 
+               begin
+                  //msgbox(ParamStr(2)+'\{#MyAppExeName}', mbInformation,MB_OK);
+                  Exec(ParamStr(2)+'\{#MyAppExeName}', ParamStr(2), '', SW_SHOWNORMAL, ewNoWait, ResultCode1);
+              end;  
+          end;
+      end;
+  end;
+end;

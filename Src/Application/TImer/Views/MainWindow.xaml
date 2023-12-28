@@ -66,9 +66,11 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <ContentControl prism:RegionManager.RegionName="{x:Static region:RegionName.TopRegion }"  Grid.Row="0" />
                     <ContentControl prism:RegionManager.RegionName="{x:Static region:RegionName.ContentRegion }"  Grid.Row="1" />
+                    <ContentControl prism:RegionManager.RegionName="{x:Static region:RegionName.BottomRegion }"  Grid.Row="2" />
                 </Grid>
             </materialDesign:DialogHost>
         </Border>

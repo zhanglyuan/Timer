@@ -35,6 +35,6 @@ namespace Common.Events
     public class UpdateAppStartEvent : PubSubEvent
     { }
 
-    public class UpdateAppEndEvent : PubSubEvent
+    public class UpdateAppEndEvent : PubSubEvent<bool>
     { }
 }

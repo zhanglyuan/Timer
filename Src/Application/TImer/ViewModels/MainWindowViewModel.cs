@@ -8,13 +8,20 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Xml.Linq;
 
 namespace TImer.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
         private readonly IVersionUpdate versionUpdate;
+        private readonly IRegionManager regionManager;
         private NotifyIcon notifyIcon;
 
         private bool _isShutDownComputerDialog;
@@ -35,6 +42,7 @@ namespace TImer.ViewModels
         public MainWindowViewModel(IContainerProvider containerProvider)
         {
             versionUpdate = containerProvider.Resolve<IVersionUpdate>();
+            regionManager = containerProvider.Resolve<IRegionManager>();
 
             DragMoveWindowCommand = new DelegateCommand(DragMoveWindowExecute);
             LoadedCommand = new DelegateCommand(LoadedExecute);
@@ -44,6 +52,36 @@ namespace TImer.ViewModels
             Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Subscribe(OnUpdateTimerEvent, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<UpdateIsWorkingEvent>().Subscribe(OnUpdateIsWorkingEvent, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<WindowTipEvent>().Subscribe(OnWindowTipEvent, ThreadOption.UIThread);
+            Mediator.EventAggregator.GetEvent<UpdateAppStartEvent>().Subscribe(OnUpdateAppStartEvent, ThreadOption.UIThread);
+            Mediator.EventAggregator.GetEvent<UpdateAppEndEvent>().Subscribe(OnUpdateAppEndEvent, ThreadOption.UIThread);
+        }
+
+        private void OnUpdateAppEndEvent(bool isSuccess)
+        {
+            var region = regionManager.Regions[RegionName.BottomRegion]; // 使用您的区域名称
+
+            var viewToRemove = region.Views.FirstOrDefault(v => v.GetType().Name == ViewName.UpdateProgressBar);
+            if (viewToRemove != null)
+            {
+                region.Remove(viewToRemove);
+            }
+
+            if (isSuccess)
+            {
+                Process.Start(new ProcessStartInfo()
+                {
+                    WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                    FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, GlobalSettings.UpdateAppExeName),
+                    Arguments = " /VERYSILENT " + $"\"{Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)}\""
+                });
+
+                Mediator.EventAggregator.GetEvent<WindowCloseEvent>().Publish();
+            }
+        }
+
+        private void OnUpdateAppStartEvent()
+        {
+            regionManager.RequestNavigate(RegionName.BottomRegion, ViewName.UpdateProgressBar);
         }
 
         private void OnWindowTipEvent()

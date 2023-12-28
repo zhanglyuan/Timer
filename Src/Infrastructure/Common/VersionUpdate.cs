@@ -76,7 +76,7 @@ namespace Common
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     {
                         // 定义保存文件的路径和文件名
-                        string savePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NewVersion.exe");
+                        string savePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, GlobalSettings.UpdateAppExeName);
 
                         // 写入文件流到磁盘文件
                         using (var fileStream = new FileStream(savePath, FileMode.Create))
@@ -85,14 +85,20 @@ namespace Common
                         }
                     }
                 }
+                else
+                {
+                    Mediator.EventAggregator.GetEvent<UpdateAppEndEvent>().Publish(false);
+                    return false;
+                }
             }
             catch (HttpRequestException e)
             {
                 Log.Error($"GetNewFile {e.Message}");
+                Mediator.EventAggregator.GetEvent<UpdateAppEndEvent>().Publish(false);
                 return false;
             }
 
-            Mediator.EventAggregator.GetEvent<UpdateAppStartEvent>().Publish();
+            Mediator.EventAggregator.GetEvent<UpdateAppEndEvent>().Publish(true);
             return true;
         }
     }

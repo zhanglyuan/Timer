@@ -49,9 +49,7 @@ namespace Common
 
         public TimerInfo GetTimer()
         {
-            var list = db.Table<TimerInfo>().ToList();
-
-            return list?.FirstOrDefault();
+            return db.Table<TimerInfo>().FirstOrDefault();
         }
     }
 }

@@ -82,13 +82,16 @@ namespace HomeModule.ViewModels
             timer = new Timer(1000);
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
-            var timerInfo = timerRepository.GetTimer();
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             var timerInfo = timerRepository.GetTimer();
-            if (DateTime.Now >= DateTime.Parse(timerInfo.WorkingHour) && DateTime.Now < DateTime.Parse(timerInfo.RushHour))
+            if (!DateTime.TryParse(timerInfo?.WorkingHour, out DateTime workingHour) ||
+                !DateTime.TryParse(timerInfo?.RushHour, out DateTime rushHour))
+                return;
+
+            if (DateTime.Now >= workingHour && DateTime.Now < rushHour)
             {
                 TimeSpan dateTime = DateTime.Parse(timerInfo.RushHour) - DateTime.Now;
                 int totalSeconds = (int)dateTime.TotalSeconds;
@@ -123,7 +126,7 @@ namespace HomeModule.ViewModels
             Log.Info($"{nameof(CloseComputer)} Strat");
 
             var timerInfo = timerRepository.GetTimer();
-            if (timerInfo.IsShutDownComputer)
+            if (timerInfo != null && timerInfo.IsShutDownComputer)
             {
 #if !DEBUG
                 Process.Start(new ProcessStartInfo("shutdown.exe", "/s /t 10")

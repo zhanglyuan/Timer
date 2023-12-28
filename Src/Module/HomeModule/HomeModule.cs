@@ -20,6 +20,7 @@ namespace HomeModule
         {
             containerRegistry.RegisterForNavigation<TimerTool>();
             containerRegistry.RegisterForNavigation<TimerContent>();
+            containerRegistry.RegisterForNavigation<UpdateProgressBar>();
         }
     }
 }
