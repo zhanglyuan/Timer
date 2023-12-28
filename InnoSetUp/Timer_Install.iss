@@ -13,9 +13,9 @@
 AppId={{49453914-5F61-4755-A4AF-7ABE00022E22}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+DefaultDirName={code:GetInstallPath}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={autopf}\{#MyAppName}
 ChangesAssociations=yes
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
@@ -59,6 +59,18 @@ Type: filesandordirs; Name: "{app}"
 
 
 [Code]
+//获取系统目录
+function GetInstallPath(Param: String):String;
+begin
+   if ParamCount >1 then 
+      begin
+        Result:=ParamStr(2);
+        Exit;
+      end; 
+
+   Result := UpperCase(ExtractFileDrive(GetSystemDir)) + '\{#MyAppName}' ;
+end;
+
 var 
     ResultCode1:integer;
 procedure CurPageChanged(CurPageID: Integer);
