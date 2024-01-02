@@ -68,7 +68,7 @@
                 <Style TargetType="{x:Type Image}">
                     <Style.Triggers>
                         <DataTrigger  Binding="{Binding IsWorking}" Value="False">
-                            <Setter Property="gif:ImageBehavior.AnimatedSource" Value="pack://application:,,,/CommonUIBase;Component/Assets/working.gif" />
+                            <Setter Property="gif:ImageBehavior.AnimatedSource" Value="pack://application:,,,/CommonUIBase;Component/Assets/rushHour.gif" />
                         </DataTrigger>
                         <DataTrigger  Binding="{Binding IsWorking}" Value="True">
                             <Setter Property="gif:ImageBehavior.AnimatedSource" Value="pack://application:,,,/CommonUIBase;Component/Assets/working.gif" />
