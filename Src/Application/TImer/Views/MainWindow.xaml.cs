@@ -14,6 +14,7 @@ namespace TImer.Views
         {
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
+            this.Closing += MainWindow_Closing;
 
             Mediator.EventAggregator.GetEvent<DragMoveWindowEvent>().Subscribe(OnDragMoveWindowEvent, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<WindowShowEvent>().Subscribe(OnWindowShowEvent, ThreadOption.UIThread);
@@ -21,9 +22,15 @@ namespace TImer.Views
             Mediator.EventAggregator.GetEvent<WindowCloseEvent>().Subscribe(OnWindowCloseEvent, ThreadOption.UIThread);
         }
 
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
+
         private void OnWindowCloseEvent()
         {
-            this.Close();
+            Environment.Exit(0);
         }
 
         private void OnWindowHideEvent()
@@ -36,6 +43,8 @@ namespace TImer.Views
             try
             {
                 this.Visibility = Visibility.Visible;
+                this.Activate();
+                this.Show();
             }
             catch (Exception)
             {
@@ -47,7 +56,7 @@ namespace TImer.Views
         private void OnWindowShowEvent()
         {
             this.Show();
-            this.WindowState= WindowState.Normal;
+            this.WindowState = WindowState.Normal;
             this.Activate();
         }
 

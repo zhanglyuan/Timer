@@ -37,7 +37,7 @@ namespace TImer.ViewModels
 
         public DelegateCommand DragMoveWindowCommand { get; private set; }
         public DelegateCommand LoadedCommand { get; private set; }
-        public DelegateCommand UnLoadedCommand { get; private set; }
+        public DelegateCommand ClosedCommand { get; private set; }
 
         public MainWindowViewModel(IContainerProvider containerProvider)
         {
@@ -46,7 +46,7 @@ namespace TImer.ViewModels
 
             DragMoveWindowCommand = new DelegateCommand(DragMoveWindowExecute);
             LoadedCommand = new DelegateCommand(LoadedExecute);
-            UnLoadedCommand = new DelegateCommand(UnLoadedExecute);
+            ClosedCommand = new DelegateCommand(ClosedExecute);
 
             Mediator.EventAggregator.GetEvent<ShutDownComputerEvent>().Subscribe(OnShutDownComputerEvent, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Subscribe(OnUpdateTimerEvent, ThreadOption.UIThread);
@@ -104,7 +104,7 @@ namespace TImer.ViewModels
             notifyIcon.Title = $"{tuple.Item1}:{tuple.Item2}:{tuple.Item3}";
         }
 
-        private void UnLoadedExecute()
+        private void ClosedExecute()
         {
             notifyIcon?.Dispose();
         }
@@ -157,6 +157,7 @@ namespace TImer.ViewModels
             };
             shutDown.Click += (s, e) =>
             {
+                notifyIcon?.Dispose();
                 Mediator.EventAggregator.GetEvent<WindowCloseEvent>().Publish();
             };
             contextMenu.Items.Add(shutDown);

@@ -42,8 +42,8 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
-        <i:EventTrigger EventName="UnLoaded">
-            <i:InvokeCommandAction Command="{Binding UnLoadedCommand}" />
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding ClosedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
