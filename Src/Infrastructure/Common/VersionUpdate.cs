@@ -21,8 +21,8 @@ namespace Common
 #else
          private Timer timer = new Timer(300000);
 #endif
-        private static readonly HttpClient client = new HttpClient();
-        private static string downloadUrl = string.Empty;
+        private readonly HttpClient client = new HttpClient();
+        private string downloadUrl = string.Empty;
 
         public VersionUpdate()
         {

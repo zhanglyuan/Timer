@@ -4,8 +4,10 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
+             xmlns:converter="clr-namespace:CommonUIBase.Converter;assembly=CommonUIBase"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
+        <converter:WeatherPathConverter  x:Key="WeatherPathConverter" />
         <Style TargetType="{x:Type Run}" x:Key="TimerStyle">
             <Setter Property="FontWeight" Value="Bold" />
 
@@ -20,17 +22,18 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="10,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1.8*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" FontSize="45" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Run Text="{Binding Path=hour, NotifyOnTargetUpdated=True}" Style="{StaticResource TimerStyle}" />
-            <Run Text=":" />
-            <Run Text="{Binding Path=minute, NotifyOnTargetUpdated=True}" Style="{StaticResource TimerStyle}" />
-            <Run Text=":" />
-            <Run Text="{Binding Path=second, NotifyOnTargetUpdated=True}" Style="{StaticResource TimerStyle}" />
+
+        <TextBlock Grid.Column="0" VerticalAlignment="Center">
+<Run Text="{Binding Path=hour, NotifyOnTargetUpdated=True}" Style="{StaticResource TimerStyle}" />
+<Run Text=":" FontSize="45" />
+<Run Text="{Binding Path=minute, NotifyOnTargetUpdated=True}" Style="{StaticResource TimerStyle}" />
+<Run Text=":" FontSize="45" />
+<Run Text="{Binding Path=second, NotifyOnTargetUpdated=True}" Style="{StaticResource TimerStyle}" />
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>
@@ -45,10 +48,11 @@
             </TextBlock.Style>
         </TextBlock>
 
-        <TextBlock Grid.Column="0" FontSize="30"
-                   FontFamily="{StaticResource AliFont}"
-                   FontWeight="Bold"
-                   Text="现在是休息时间!" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock  FontSize="30"
+     FontFamily="{StaticResource AliFont}"
+     FontWeight="Bold"
+     Text="现在是休息时间!"
+     Grid.Column="0" VerticalAlignment="Center">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>
@@ -62,6 +66,29 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
+
+        <StackPanel Grid.Column="0"
+                    VerticalAlignment="Bottom"
+                    ToolTip="{Binding WeatherToolTip}"
+                    Orientation="Horizontal">
+            <TextBlock Text="{Binding City}"
+                       FontFamily="{StaticResource AliFont}"
+                       FontSize="15"
+                       VerticalAlignment="Bottom"/>
+
+            <Image Width="25" Height="25"
+                   ToolTip="{Binding WeatherTxt}">
+                <Image.Source>
+                    <DrawingImage Drawing="{Binding WeatherTxt,Converter={StaticResource WeatherPathConverter}}" />
+                </Image.Source>
+            </Image>
+
+            <TextBlock Text="{Binding Temperature}"
+                        FontFamily="{StaticResource AliFont}"
+                       VerticalAlignment="Bottom"
+                        FontSize="15" 
+                        Margin="10,0,0,0"/>
+        </StackPanel>
 
         <Image  Grid.Column="1"  VerticalAlignment="Center">
             <Image.Style>

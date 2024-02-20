@@ -41,6 +41,7 @@ namespace TImer
             containerRegistry.RegisterSingleton<ITimerRepository, TimerRepository>();
             containerRegistry.RegisterSingleton<ILocalDB, LocalDB>();
             containerRegistry.RegisterSingleton<IVersionUpdate, VersionUpdate>();
+            containerRegistry.RegisterSingleton<IWeather, Weather>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

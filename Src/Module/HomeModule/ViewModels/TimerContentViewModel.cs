@@ -1,10 +1,12 @@
 ﻿using Common;
 using Common.Events;
 using Common.Interfaces;
+using Common.Model;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -60,16 +62,77 @@ namespace HomeModule.ViewModels
             }
         }
 
+        private string _city = "当前天气：";
+
+        public string City
+        {
+            get { return _city; }
+            set
+            {
+                SetProperty(ref _city, value);
+            }
+        }
+
+        private string _weatherTxt = string.Empty;
+
+        public string WeatherTxt
+        {
+            get { return _weatherTxt; }
+            set
+            {
+                SetProperty(ref _weatherTxt, value);
+            }
+        }
+
+        private string _temperature = string.Empty;
+
+        public string Temperature
+        {
+            get { return _temperature; }
+            set
+            {
+                SetProperty(ref _temperature, value);
+            }
+        }
+
+        private string _weatherToolTip = string.Empty;
+
+        public string WeatherToolTip
+        {
+            get { return _weatherToolTip; }
+            set
+            {
+                SetProperty(ref _weatherToolTip, value);
+            }
+        }
+
         private readonly ITimerRepository timerRepository;
+        private readonly IWeather weather;
         private Timer timer = null;
 
         public TimerContentViewModel(IContainerProvider containerProvider)
         {
             timerRepository = containerProvider.Resolve<ITimerRepository>();
+            weather = containerProvider.Resolve<IWeather>();
 
             Mediator.EventAggregator.GetEvent<TimerInitEvent>().Subscribe(OnTimerInitEvent);
             Mediator.EventAggregator.GetEvent<UpdateTimerEvent>().Subscribe(OnUpdateTimerEvent, ThreadOption.UIThread);
             Mediator.EventAggregator.GetEvent<UpdateIsWorkingEvent>().Subscribe(OnUpdateIsWorkingEvent, ThreadOption.UIThread);
+
+            Mediator.EventAggregator.GetEvent<UpdateWeatherEvent>().Subscribe(OnUpdateWeatherEvent, ThreadOption.UIThread);
+
+            _ = weather.GetLocationWeather();
+        }
+
+        private void OnUpdateWeatherEvent(Tuple<Location, WeatherInfo> weatherinfo)
+        {
+            if (weatherinfo != null && weatherinfo.Item1 != null && weatherinfo.Item2 != null)
+            {
+                City = weatherinfo?.Item1?.City + "当前天气：";
+                WeatherTxt = weatherinfo?.Item2?.Lives?[0]?.weather;
+                Temperature = "温度" + weatherinfo?.Item2?.Lives?[0]?.Temperature + "°";
+                WeatherToolTip = WeatherTxt + " " + Temperature;
+            }
         }
 
         private void OnTimerInitEvent()
