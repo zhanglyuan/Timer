@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
              xmlns:converter="clr-namespace:CommonUIBase.Converter;assembly=CommonUIBase"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
@@ -74,20 +75,16 @@
             <TextBlock Text="{Binding City}"
                        FontFamily="{StaticResource AliFont}"
                        FontSize="15"
-                       VerticalAlignment="Bottom"/>
+                       VerticalAlignment="Bottom" />
 
-            <Image Width="25" Height="25"
-                   ToolTip="{Binding WeatherTxt}">
-                <Image.Source>
-                    <DrawingImage Drawing="{Binding WeatherTxt,Converter={StaticResource WeatherPathConverter}}" />
-                </Image.Source>
-            </Image>
+            <svgc:SvgViewbox Width="25" Height="25" ToolTip="{Binding WeatherTxt}"
+                             Source="{Binding SvgUrl,Converter={StaticResource WeatherPathConverter}}" />
 
             <TextBlock Text="{Binding Temperature}"
                         FontFamily="{StaticResource AliFont}"
                        VerticalAlignment="Bottom"
-                        FontSize="15" 
-                        Margin="10,0,0,0"/>
+                        FontSize="15"
+                        Margin="10,0,0,0" />
         </StackPanel>
 
         <Image  Grid.Column="1"  VerticalAlignment="Center">

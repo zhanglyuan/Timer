@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common.Model
 {
-    public class Location : BaseMsg
+    public class IPLocation : BaseMsg
     {
         /// <summary>
         /// 省份

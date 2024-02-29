@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Constants;
 using Common.Events;
 using Common.Interfaces;
 using Common.Model;
@@ -106,6 +107,17 @@ namespace HomeModule.ViewModels
             }
         }
 
+        private string _svgUrl = GlobalSettings.DefaultSvgUrl;
+
+        public string SvgUrl
+        {
+            get { return _svgUrl; }
+            set
+            {
+                SetProperty(ref _svgUrl, value);
+            }
+        }
+
         private readonly ITimerRepository timerRepository;
         private readonly IWeather weather;
         private Timer timer = null;
@@ -124,14 +136,16 @@ namespace HomeModule.ViewModels
             _ = weather.GetLocationWeather();
         }
 
-        private void OnUpdateWeatherEvent(Tuple<Location, WeatherInfo> weatherinfo)
+        private void OnUpdateWeatherEvent(Tuple<IPLocation, WeatherInfo> weatherinfo)
         {
             if (weatherinfo != null && weatherinfo.Item1 != null && weatherinfo.Item2 != null)
             {
                 City = weatherinfo?.Item1?.City + "当前天气：";
-                WeatherTxt = weatherinfo?.Item2?.Lives?[0]?.weather;
-                Temperature = "温度" + weatherinfo?.Item2?.Lives?[0]?.Temperature + "°";
+                WeatherTxt = weatherinfo?.Item2?.NowWeather.Text;
+                Temperature = "温度" + weatherinfo?.Item2?.NowWeather.Temp + "℃";
                 WeatherToolTip = WeatherTxt + " " + Temperature;
+
+                SvgUrl = !string.IsNullOrEmpty(weatherinfo?.Item2?.NowWeather.Icon) ? string.Format(GlobalSettings.NowSvgUrl, weatherinfo?.Item2?.NowWeather.Icon) : GlobalSettings.DefaultSvgUrl;
             }
         }
 

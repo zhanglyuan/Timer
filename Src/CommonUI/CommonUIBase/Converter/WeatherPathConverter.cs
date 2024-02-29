@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Constants;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -19,14 +20,13 @@ namespace CommonUIBase.Converter
                 string? Weather = value as string;
                 if (!string.IsNullOrEmpty(Weather))
                 {
-                    DrawingGroup pathGeometry = (DrawingGroup)Application.Current.Resources[Weather];
-                    return pathGeometry;
+                    return new Uri(Weather);
                 }
-                return (DrawingGroup)Application.Current.Resources["未知"];
+                return new Uri(GlobalSettings.DefaultSvgUrl);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return (DrawingGroup)Application.Current.Resources["未知"];
+                return new Uri(GlobalSettings.DefaultSvgUrl);
             }
         }
 

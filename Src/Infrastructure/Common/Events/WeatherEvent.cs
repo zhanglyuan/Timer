@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Common.Events
 {
-    public class UpdateWeatherEvent : PubSubEvent<Tuple<Location, WeatherInfo>>
+    public class UpdateWeatherEvent : PubSubEvent<Tuple<IPLocation, WeatherInfo>>
     {
     }
 }
