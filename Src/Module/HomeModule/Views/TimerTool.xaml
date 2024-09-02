@@ -45,7 +45,7 @@
             </materialDesign:DialogHost>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal"  Margin="0,8,0,0">
+        <!--<StackPanel Orientation="Horizontal"  Margin="0,8,0,0">
             <ToggleButton
                             Width="25"
                             Height="25"
@@ -57,6 +57,6 @@
 
             <TextBlock Text="十秒后自动关机" Foreground="Red" VerticalAlignment="Center"
                         Margin="10,0,0,0" />
-        </StackPanel>
+        </StackPanel>-->
     </StackPanel>
 </UserControl>

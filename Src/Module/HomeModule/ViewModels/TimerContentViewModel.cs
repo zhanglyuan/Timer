@@ -205,15 +205,15 @@ namespace HomeModule.ViewModels
             var timerInfo = timerRepository.GetTimer();
             if (timerInfo != null && timerInfo.IsShutDownComputer)
             {
-#if !DEBUG
-                Process.Start(new ProcessStartInfo("shutdown.exe", "/s /t 10")
-                {
-                    UseShellExecute = false,
-                    Verb = "runas",
-                    CreateNoWindow = true,
-                });
+//#if !DEBUG
+//                Process.Start(new ProcessStartInfo("shutdown.exe", "/s /t 10")
+//                {
+//                    UseShellExecute = false,
+//                    Verb = "runas",
+//                    CreateNoWindow = true,
+//                });
 
-#endif
+//#endif
                 Mediator.EventAggregator.GetEvent<ShutDownComputerEvent>().Publish();
             }
 
